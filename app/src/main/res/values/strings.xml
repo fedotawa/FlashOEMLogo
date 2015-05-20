@@ -35,9 +35,14 @@
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="title_activity_color_settings">Color Downsampling</string>
     <string name="textNoDownsampling">No downsampling</string>
-    <string name="textDownsamplingExplanation">Try only RGB 555 if you don\'t know what you are doing. No downsampling may cause unpredictable hardware failures.</string>
+    <string name="textDownsamplingExplanation">If the flashed image looks glitchy, try to change the number of colors. Change these values only if you understand what you are doing.</string>
     <string name="textColorSettings">Color Settings</string>
     <string name="textSupportedHardware">List of supported hardware</string>
     <string name="title_activity_supported_hardware">Supported Hardware</string>
     <string name="textHardwareWarning">Use the application at your own risk if your hardware isn\'t listed here. It may potentially make your phone useless even if the model is supported.</string>
+    <string name="textRGB444">RGB 444 (4096 colors)</string>
+    <string name="textRGB454">RGB 454 (8192 colors)</string>
+    <string name="textRGB555">RGB 555 (32k colors)</string>
+    <string name="textRGB565">RGB 565 (64k colors)</string>
+    <string name="textRGB565table">RGB 565 (table)</string>
 </resources>

@@ -21,6 +21,7 @@ public class ColorSettingsActivity extends ActionBarActivity {
         RadioButton radio454 = (RadioButton)findViewById(R.id.radio454);
         RadioButton radio555 = (RadioButton)findViewById(R.id.radio555);
         RadioButton radio565 = (RadioButton)findViewById(R.id.radio565);
+        RadioButton radio565table = (RadioButton)findViewById(R.id.radio565table);
         RadioButton radioNoDownsampling = (RadioButton)findViewById(R.id.radioNoDownsampling);
 
         switch (getIntent().getIntExtra(FlashActivity.TAG_DOWNSAMPLING, FlashActivity.DOWNSAMPLE_565))
@@ -37,6 +38,9 @@ public class ColorSettingsActivity extends ActionBarActivity {
             case FlashActivity.DOWNSAMPLE_565:
                 radio565.setChecked(true);
                 break;
+            case FlashActivity.DOWNSAMPLE_565_TABLE:
+                radio565table.setChecked(true);
+                break;
             default:
                 radioNoDownsampling.setChecked(true);
                 break;
@@ -44,8 +48,9 @@ public class ColorSettingsActivity extends ActionBarActivity {
 
         radio444.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_444));
         radio454.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_454));
-        radio565.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_565));
         radio555.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_555));
+        radio565.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_565));
+        radio565table.setTag(R.id.value_tag, new Integer(FlashActivity.DOWNSAMPLE_565_TABLE));
         radioNoDownsampling.setTag(R.id.value_tag, new Integer(FlashActivity.NO_DOWNSAMPLING));
 
         View.OnClickListener radioListener = new View.OnClickListener() {
@@ -62,6 +67,7 @@ public class ColorSettingsActivity extends ActionBarActivity {
         radio454.setOnClickListener(radioListener);
         radio555.setOnClickListener(radioListener);
         radio565.setOnClickListener(radioListener);
+        radio565table.setOnClickListener(radioListener);
         radioNoDownsampling.setOnClickListener(radioListener);
 
     }

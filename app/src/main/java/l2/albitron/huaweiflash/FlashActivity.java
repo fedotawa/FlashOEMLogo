@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,9 +28,6 @@ import java.io.InputStream;
 
 public class FlashActivity extends ActionBarActivity  {
 
-    protected static final int TARGET_WIDTH = 720;
-    protected static final int TARGET_HEIGHT = 1280;
-
     protected static final int REQ_CODE_PICK_IMAGE = 1;
     protected static final int REQ_CODE_DOWNSAMPLING = 2;
 
@@ -37,6 +36,7 @@ public class FlashActivity extends ActionBarActivity  {
     public static final int DOWNSAMPLE_454 = 454;
     public static final int DOWNSAMPLE_555 = 555;
     public static final int DOWNSAMPLE_565 = 565;
+    public static final int DOWNSAMPLE_565_TABLE = 5650;
     public static final int NO_DOWNSAMPLING = 0;
 
     public static final float FACTOR_4 = 15.0f;
@@ -44,17 +44,20 @@ public class FlashActivity extends ActionBarActivity  {
     public static final float FACTOR_6 = 63.0f;
 
     // RGB 565 -> 888 conversion tables
-//    private static short [] table5 = new short []
-//            {0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123, 132,
-//            140, 148, 156, 165, 173, 181, 189, 197, 206, 214, 222, 230, 239, 247, 255};
-//
-//    private static short [] table6 = new short []
-//            {0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 45, 49, 53, 57, 61, 65, 69,
-//            73, 77, 81, 85, 89, 93, 97, 101, 105, 109, 113, 117, 121, 125, 130, 134, 138,
-//            142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198,
-//            202, 206, 210, 215, 219, 223, 227, 231, 235, 239, 243, 247, 251, 255};
+    private static short [] table5 = new short []
+            {0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123, 132,
+            140, 148, 156, 165, 173, 181, 189, 197, 206, 214, 222, 230, 239, 247, 255, 0};
+
+    private static short [] table6 = new short []
+            {0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 45, 49, 53, 57, 61, 65, 69,
+            73, 77, 81, 85, 89, 93, 97, 101, 105, 109, 113, 117, 121, 125, 130, 134, 138,
+            142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198,
+            202, 206, 210, 215, 219, 223, 227, 231, 235, 239, 243, 247, 251, 255, 0};
 
     public static final String OEMLOGO_PATH = "/cust/media/oemlogo.mbn";
+
+    protected int mTargetWidth = 720;
+    protected int mTargetHeight = 1280;
 
     private Bitmap mBitmap = null;
     private File mBitmapFile = null;
@@ -68,8 +71,8 @@ public class FlashActivity extends ActionBarActivity  {
 
 
             final Bitmap scaled =
-                    (mBitmap.getWidth() != TARGET_WIDTH || mBitmap.getHeight() != TARGET_HEIGHT)
-                            ? mBitmap.createScaledBitmap(mBitmap, TARGET_WIDTH, TARGET_HEIGHT, true)
+                    (mBitmap.getWidth() != mTargetWidth || mBitmap.getHeight() != mTargetHeight)
+                            ? mBitmap.createScaledBitmap(mBitmap, mTargetWidth, mTargetHeight, true)
                             : mBitmap;
 
             final Bitmap converted = scaled; //scaled.copy(Bitmap.Config.RGB_565, false);
@@ -167,21 +170,23 @@ public class FlashActivity extends ActionBarActivity  {
                     {
                         int px = image.getPixel(x, y);
 
-                        // 888 -> 565
-//                        byte b = (byte)Math.round(((float) Color.blue(px) / 255.0f) * 31.0f);
-//                        byte g = (byte)Math.round(((float) Color.green(px) / 255.0f) * 63.0f);
-//                        byte r = (byte)Math.round(((float) Color.red(px) / 255.0f) * 31.0f);
-
-                        // 565 -> 888
-//                        output[i++] = (byte) table5[b];
-//                        output[i++] = (byte) table5[g];
-//                        output[i++] = (byte) table5[r];
-
                         if (mDownsampling == NO_DOWNSAMPLING)
                         {
                             b = (byte)Color.blue(px);
                             g = (byte)Color.green(px);
                             r = (byte)Color.red(px);
+                        }
+                        else if (mDownsampling == DOWNSAMPLE_565_TABLE)
+                        {
+                            // 888 -> 565
+                            b = (byte)Math.round((Color.blue(px) / 255.0f) * 31.0f);
+                            g = (byte)Math.round((Color.green(px) / 255.0f) * 63.0f);
+                            r = (byte)Math.round((Color.red(px) / 255.0f) * 31.0f);
+
+                            // 565 -> 888
+                            b = (byte) table5[b];
+                            g = (byte) table6[g];
+                            r = (byte) table5[r];
                         }
                         else
                         {
@@ -212,14 +217,23 @@ public class FlashActivity extends ActionBarActivity  {
 
     private void flashPixels(File file)
     {
-        try{
+        File oemlogo = new File(OEMLOGO_PATH);
+
+        try {
             Process su = Runtime.getRuntime().exec("su");
             DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
 
             String libdir = getApplicationInfo().nativeLibraryDir;
 
-            outputStream.writeBytes("rm " + OEMLOGO_PATH + "\n");
-            outputStream.flush();
+            if (!oemlogo.getParentFile().exists()) {
+                outputStream.writeBytes("mkdir " + oemlogo.getParentFile() + "\n");
+                outputStream.flush();
+            }
+
+            if (oemlogo.exists()) {
+                outputStream.writeBytes("rm " + OEMLOGO_PATH + "\n");
+                outputStream.flush();
+            }
 
             outputStream.writeBytes("cp -f  " + file.getAbsolutePath() + " " + OEMLOGO_PATH + "\n");
             outputStream.flush();
@@ -256,6 +270,12 @@ public class FlashActivity extends ActionBarActivity  {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        mTargetWidth = size.x;
+        mTargetHeight = size.y;
+
         ImageView imageToFlash = (ImageView)findViewById(R.id.imageView);
 
         imageToFlash.setOnClickListener(new View.OnClickListener() {
@@ -277,9 +297,22 @@ public class FlashActivity extends ActionBarActivity  {
                     photoPickerIntent.putExtra("output", tempUri);
                 }
 
+                int n1 = mTargetWidth;
+                int n2 = mTargetHeight;
+
+                // get aspect ratio
+                while (n1 != 0 && n2 != 0){
+                    if(n1 > n2)
+                        n1 = n1 % n2;
+                    else
+                        n2 = n2 % n1;
+                }
+
+                int gcd = n1 == 0? n2: n1;
+
                 photoPickerIntent.setType("image/*");
-                photoPickerIntent.putExtra("aspectX", 9);
-                photoPickerIntent.putExtra("aspectY", 16);
+                photoPickerIntent.putExtra("aspectX", mTargetWidth / gcd);
+                photoPickerIntent.putExtra("aspectY", mTargetHeight / gcd);
                 photoPickerIntent.putExtra("crop", "true");
                 photoPickerIntent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
                 startActivityForResult(photoPickerIntent, REQ_CODE_PICK_IMAGE);

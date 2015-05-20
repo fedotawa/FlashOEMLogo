@@ -14,7 +14,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RGB 444"
+            android:text="@string/textRGB444"
             android:id="@+id/radio444"
             android:layout_marginLeft="29dp"
             android:layout_marginStart="29dp"
@@ -26,7 +26,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RGB 454"
+            android:text="@string/textRGB454"
             android:id="@+id/radio454"
             android:layout_below="@+id/radioNoDownsampling"
             android:layout_alignLeft="@+id/radioNoDownsampling"
@@ -37,7 +37,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RGB 555"
+            android:text="@string/textRGB555"
             android:id="@+id/radio555"
             android:layout_below="@+id/radio454"
             android:layout_alignLeft="@+id/radio454"
@@ -48,13 +48,21 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RGB 565"
+            android:text="@string/textRGB565"
             android:id="@+id/radio565"
             android:layout_below="@+id/radio555"
             android:layout_alignLeft="@+id/radio555"
             android:layout_alignStart="@+id/radio555"
             android:layout_marginTop="25dp"
             android:layout_marginLeft="29dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/textRGB565table"
+            android:id="@+id/radio565table"
+            android:layout_marginLeft="29dp"
+            android:layout_marginTop="25dp" />
 
         <RadioButton
             android:layout_width="wrap_content"

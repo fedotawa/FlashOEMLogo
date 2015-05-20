@@ -16,10 +16,20 @@
         android:text="Huawei Ascend D1 (U9500)"
         android:id="@+id/textView4"
         android:textStyle="bold"
+        android:layout_marginTop="21dp"
         android:layout_below="@+id/textWarning"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Huawei Ascend P1 (U9200)"
+        android:id="@+id/textView"
+        android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

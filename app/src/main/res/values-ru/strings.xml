@@ -14,7 +14,7 @@
     </string>
     <string name="flash_image">Прошивка изображения</string>
     <string name="textColorSettings">Настройки цветности</string>
-    <string name="textDownsamplingExplanation">Изменяйте эти значения, только если вы понимаете, что делаете. Отсутствие преобразования цветности может привести к непредсказуемым последствиям.</string>
+    <string name="textDownsamplingExplanation">Если прошитое изображение выглядит некорректно, попробуйте уменшить количество цветов. Изменяйте эти значения, только если понимаете, что вы делаете.</string>
     <string name="textFlash">Прошивка</string>
     <string name="textFlashImage">Прошивка изображения</string>
     <string name="textFlashOEMLogoMBN">Прошить /cust/media/oemlogo.mbn</string>
@@ -27,4 +27,9 @@
     <string name="textTapToSelect">Коснитесь, чтобы выбрать изображение</string>
     <string name="title_activity_color_settings">Изменение цветности</string>
     <string name="title_activity_supported_hardware">Поддерживаемые устройства</string>
+    <string name="textRGB444">RGB 444 (4096 цветов)</string>
+    <string name="textRGB454">RGB 454 (8192 цветов)</string>
+    <string name="textRGB555">RGB 555 (32 тыс. цветов)</string>
+    <string name="textRGB565">RGB 565 (64 тыс. цветов)</string>
+    <string name="textRGB565table">RGB 565 (таблица)</string>
 </resources>
