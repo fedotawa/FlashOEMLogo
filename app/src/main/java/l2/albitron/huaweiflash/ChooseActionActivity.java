@@ -103,7 +103,7 @@ public class ChooseActionActivity extends ActionBarActivity {
                         outputStream.flush();
 
                         // this isn't actually a library, just a renamed binary to trick the IDE
-                        //outputStream.writeBytes(libdir + "/libflash_oemlogo.so\n");
+                        outputStream.writeBytes(libdir + "/libflash_oemlogo.so\n");
                         outputStream.flush();
                         result = true;
                     }
