@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="l2.albitron.huaweiflash.ColorSettingsActivity">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RGB 444"
+            android:id="@+id/radio444"
+            android:layout_marginLeft="29dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="29dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RGB 454"
+            android:id="@+id/radio454"
+            android:layout_below="@+id/radioNoDownsampling"
+            android:layout_alignLeft="@+id/radioNoDownsampling"
+            android:layout_alignStart="@+id/radioNoDownsampling"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="29dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RGB 555"
+            android:id="@+id/radio555"
+            android:layout_below="@+id/radio454"
+            android:layout_alignLeft="@+id/radio454"
+            android:layout_alignStart="@+id/radio454"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="29dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RGB 565"
+            android:id="@+id/radio565"
+            android:layout_below="@+id/radio555"
+            android:layout_alignLeft="@+id/radio555"
+            android:layout_alignStart="@+id/radio555"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="29dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/textNoDownsampling"
+            android:id="@+id/radioNoDownsampling"
+            android:layout_below="@+id/radio565"
+            android:layout_alignLeft="@+id/radio565"
+            android:layout_alignStart="@+id/radio565"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="29dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/textDownsamplingExplanation"
+            android:id="@+id/textView2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp" />
+
+    </RadioGroup>
+
+</RelativeLayout>
