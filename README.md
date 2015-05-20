@@ -15,8 +15,8 @@ Currently tested only on U9500 which uses RGB24 oemlogo.mbn files.
   require the presence of /data/custom.bin file and takes image from 
   /cust/media/oemlogo.mbn.
 
-  It allows to automatically crop images, resize them to 720x1280 and decrease 
-  color depth.
+  The app allows to automatically crop images, resize them to 720x1280 and 
+  decrease color depth.
   You also can flash oemlogo.mbn file directly if you use advanced color 
   downsampling or dithering.
 
