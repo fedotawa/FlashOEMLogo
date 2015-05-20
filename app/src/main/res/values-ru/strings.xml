@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flash OEM Logo</string>
+    <string name="action_settings">Настройки</string>
+    <string name="bsdClause">
+        <![CDATA[
+            <html>
+            <head><meta charset="UTF-8"></head>
+            <body style="text-align:justify;color:gray;font-size:8pt">
+            ЭТА ПРОГРАММА ПРЕДОСТАВЛЕНА ВЛАДЕЛЬЦАМИ АВТОРСКИХ ПРАВ И/ИЛИ ДРУГИМИ СТОРОНАМИ «КАК ОНА ЕСТЬ» БЕЗ КАКОГО-ЛИБО ВИДА ГАРАНТИЙ, ВЫРАЖЕННЫХ ЯВНО ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ ИМИ, ПОДРАЗУМЕВАЕМЫЕ ГАРАНТИИ КОММЕРЧЕСКОЙ ЦЕННОСТИ И ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ. НИ В КОЕМ СЛУЧАЕ, ЕСЛИ НЕ ТРЕБУЕТСЯ СООТВЕТСТВУЮЩИМ ЗАКОНОМ, ИЛИ НЕ УСТАНОВЛЕНО В УСТНОЙ ФОРМЕ, НИ ОДИН ВЛАДЕЛЕЦ АВТОРСКИХ ПРАВ И НИ ОДНО ДРУГОЕ ЛИЦО, КОТОРОЕ МОЖЕТ ИЗМЕНЯТЬ И/ИЛИ ПОВТОРНО РАСПРОСТРАНЯТЬ ПРОГРАММУ, КАК БЫЛО СКАЗАНО ВЫШЕ, НЕ НЕСЁТ ОТВЕТСТВЕННОСТИ, ВКЛЮЧАЯ ЛЮБЫЕ ОБЩИЕ, СЛУЧАЙНЫЕ, СПЕЦИАЛЬНЫЕ ИЛИ ПОСЛЕДОВАВШИЕ УБЫТКИ, ВСЛЕДСТВИЕ ИСПОЛЬЗОВАНИЯ ИЛИ НЕВОЗМОЖНОСТИ ИСПОЛЬЗОВАНИЯ ПРОГРАММЫ (ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ ПОТЕРЕЙ ДАННЫХ, ИЛИ ДАННЫМИ, СТАВШИМИ НЕПРАВИЛЬНЫМИ, ИЛИ ПОТЕРЯМИ ПРИНЕСЕННЫМИ ИЗ-ЗА ВАС ИЛИ ТРЕТЬИХ ЛИЦ, ИЛИ ОТКАЗОМ ПРОГРАММЫ РАБОТАТЬ СОВМЕСТНО С ДРУГИМИ ПРОГРАММАМИ), ДАЖЕ ЕСЛИ ТАКОЙ ВЛАДЕЛЕЦ ИЛИ ДРУГОЕ ЛИЦО БЫЛИ ИЗВЕЩЕНЫ О ВОЗМОЖНОСТИ ТАКИХ УБЫТКОВ.
+            </body>
+            </html>
+        ]]>
+    </string>
+    <string name="flash_image">Прошивка изображения</string>
+    <string name="textColorSettings">Настройки цветности</string>
+    <string name="textDownsamplingExplanation">Изменяйте эти значения, только если вы понимаете, что делаете. Отсутствие преобразования цветности может привести к непредсказуемым последствиям.</string>
+    <string name="textFlash">Прошивка</string>
+    <string name="textFlashImage">Прошивка изображения</string>
+    <string name="textFlashOEMLogoMBN">Прошить /cust/media/oemlogo.mbn</string>
+    <string name="textHardwareWarning">Используйте это приложение на свой страх и риск, если модель вашего устройства не перечислена ниже. Приложение может сделать ваш телефон бесполезным даже если его модель поддерживается.</string>
+    <string name="textNoDownsampling">Без преобразования</string>
+    <string name="textNoMBN">Поместите oemlogo.mbn в /cust/media/</string>
+    <string name="textNoMBNError">Ошибка чтения</string>
+    <string name="textPleaseWait">Пожалуйста, подождите...</string>
+    <string name="textSupportedHardware">Список поддерживаемых устройств</string>
+    <string name="textTapToSelect">Коснитесь, чтобы выбрать изображение</string>
+    <string name="title_activity_color_settings">Изменение цветности</string>
+    <string name="title_activity_supported_hardware">Поддерживаемые устройства</string>
+</resources>

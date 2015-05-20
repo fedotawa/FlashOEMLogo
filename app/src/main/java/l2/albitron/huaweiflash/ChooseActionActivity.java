@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -48,10 +49,12 @@ public class ChooseActionActivity extends ActionBarActivity {
         view.setBackgroundColor(0x00000000);
         view.setVerticalScrollBarEnabled(false);
         view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        WebSettings settings = view.getSettings();
+        settings.setDefaultTextEncodingName("utf-8");
 
         ((RelativeLayout)findViewById(R.id.chooserLayout)).addView(view);
 
-        view.loadData(getString(R.string.bsdClause), "text/html", "utf-8");
+        view.loadDataWithBaseURL(null, getString(R.string.bsdClause), "text/html", "utf-8", null);
 
         final Button flashImage = (Button)findViewById(R.id.buttonFlashImage);
         flashImage.setOnClickListener(new View.OnClickListener() {

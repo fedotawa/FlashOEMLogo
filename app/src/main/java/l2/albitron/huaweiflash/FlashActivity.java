@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -57,7 +58,7 @@ public class FlashActivity extends ActionBarActivity  {
 
     private Bitmap mBitmap = null;
     private File mBitmapFile = null;
-    private int mDownsampling = DOWNSAMPLE_454;
+    private int mDownsampling = DOWNSAMPLE_565;
 
         View.OnClickListener onFlashClicked = new View.OnClickListener() {
         @Override
@@ -320,6 +321,8 @@ public class FlashActivity extends ActionBarActivity  {
                             Button buttonFlash = (Button) findViewById(R.id.buttonFlash);
                             buttonFlash.setEnabled(true);
 
+                            TextView textSelectImage = (TextView)findViewById(R.id.textSelectImage);
+                            textSelectImage.setText("");
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -333,7 +336,7 @@ public class FlashActivity extends ActionBarActivity  {
                 break;
             case REQ_CODE_DOWNSAMPLING:
                 if (resultCode == RESULT_OK) {
-                    mDownsampling = resultIntent.getIntExtra(TAG_DOWNSAMPLING, DOWNSAMPLE_454);
+                    mDownsampling = resultIntent.getIntExtra(TAG_DOWNSAMPLING, DOWNSAMPLE_565);
                 }
         }
     }

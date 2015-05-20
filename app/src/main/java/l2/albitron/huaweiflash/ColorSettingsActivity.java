@@ -23,7 +23,7 @@ public class ColorSettingsActivity extends ActionBarActivity {
         RadioButton radio565 = (RadioButton)findViewById(R.id.radio565);
         RadioButton radioNoDownsampling = (RadioButton)findViewById(R.id.radioNoDownsampling);
 
-        switch (getIntent().getIntExtra(FlashActivity.TAG_DOWNSAMPLING, FlashActivity.DOWNSAMPLE_454))
+        switch (getIntent().getIntExtra(FlashActivity.TAG_DOWNSAMPLING, FlashActivity.DOWNSAMPLE_565))
         {
             case FlashActivity.DOWNSAMPLE_444:
                 radio444.setChecked(true);
