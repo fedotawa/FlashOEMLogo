@@ -1,7 +1,7 @@
 ## Flash OEM Logo
 
 GUI frontend for a modified load_oemlogo utility for Huawei phones.
-Currently tested on U9500 U9200 which use RGB24 oemlogo.mbn files.
+Currently tested on U9500 and U9200 which use RGB24 oemlogo.mbn files.
 
 ###Requirements
 
@@ -15,7 +15,7 @@ Currently tested on U9500 U9200 which use RGB24 oemlogo.mbn files.
   require the presence of /data/custom.bin file and takes image from 
   /cust/media/oemlogo.mbn.
 
-  The app allows to automatically crop images, resize them to screen dimensions
+  The app allows to automatically crop images, resize them to screen dimension
   and decrease color depth.
   You also can flash oemlogo.mbn file directly if you use advanced color 
   downsampling or dithering.
