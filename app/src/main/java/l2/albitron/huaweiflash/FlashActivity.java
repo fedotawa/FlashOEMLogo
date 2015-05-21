@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class FlashActivity extends ActionBarActivity  {
 
@@ -32,11 +33,15 @@ public class FlashActivity extends ActionBarActivity  {
     protected static final int REQ_CODE_DOWNSAMPLING = 2;
 
     public static final String TAG_DOWNSAMPLING = "downsampling";
-    public static final int DOWNSAMPLE_444 = 444;
-    public static final int DOWNSAMPLE_454 = 454;
-    public static final int DOWNSAMPLE_555 = 555;
-    public static final int DOWNSAMPLE_565 = 565;
-    public static final int DOWNSAMPLE_565_TABLE = 5650;
+    public static final int DOWNSAMPLE_FFMPEG = 0x1;
+    public static final int DOWNSAMPLE_444 = DOWNSAMPLE_FFMPEG | 0x2;
+    public static final int DOWNSAMPLE_454 = 0x4;
+    public static final int DOWNSAMPLE_555 = 0x8;
+    public static final int DOWNSAMPLE_565 = 0x10;
+    public static final int DOWNSAMPLE_565_TABLE = 0x20;
+    public static final int DOWNSAMPLE_555_FFMPEG = DOWNSAMPLE_FFMPEG | 0x40;
+    public static final int DOWNSAMPLE_565_FFMPEG = DOWNSAMPLE_FFMPEG | 0x80;
+
     public static final int NO_DOWNSAMPLING = 0;
 
     public static final float FACTOR_4 = 15.0f;
@@ -54,25 +59,28 @@ public class FlashActivity extends ActionBarActivity  {
             142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198,
             202, 206, 210, 215, 219, 223, 227, 231, 235, 239, 243, 247, 251, 255, 0};
 
-    public static final String OEMLOGO_PATH = "/cust/media/oemlogo.mbn";
+    static final String OEMLOGO_PATH = "/cust/media/oemlogo.mbn";
+    // these are not actually libraries, just renamed binaries to trick the IDE
+    private static final String FLASHER_BINARY = "libflash_oemlogo.so";
+    private static final String FFMPEG_BINARY = "libffmpeg.so";
 
     protected int mTargetWidth = 720;
     protected int mTargetHeight = 1280;
 
     private Bitmap mBitmap = null;
     private File mBitmapFile = null;
-    private int mDownsampling = DOWNSAMPLE_565;
+    private int mDownsampling = DOWNSAMPLE_565_FFMPEG;
 
-        View.OnClickListener onFlashClicked = new View.OnClickListener() {
+    View.OnClickListener onFlashClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mBitmap == null)
                 return;
 
 
-            final Bitmap scaled =
+            Bitmap scaled =
                     (mBitmap.getWidth() != mTargetWidth || mBitmap.getHeight() != mTargetHeight)
-                            ? mBitmap.createScaledBitmap(mBitmap, mTargetWidth, mTargetHeight, true)
+                            ? Bitmap.createScaledBitmap(mBitmap, mTargetWidth, mTargetHeight, true)
                             : mBitmap;
 
             final Bitmap converted = scaled; //scaled.copy(Bitmap.Config.RGB_565, false);
@@ -80,13 +88,13 @@ public class FlashActivity extends ActionBarActivity  {
             try {
                 final File pixels =
                         File.createTempFile(String.valueOf(System.currentTimeMillis()),
-                            "", getFilesDir());
+                                ".png", getFilesDir());
 
                 Button buttonFlash = (Button) findViewById(R.id.buttonFlash);
                 buttonFlash.setText(getResources().getString(R.string.textPleaseWait));
                 buttonFlash.setEnabled(false);
 
-                Button buttonColorSettings = (Button)findViewById(R.id.buttonColorSettings);
+                Button buttonColorSettings = (Button) findViewById(R.id.buttonColorSettings);
                 buttonColorSettings.setEnabled(false);
 
                 ImageView imageToFlash = (ImageView) findViewById(R.id.imageView);
@@ -95,9 +103,17 @@ public class FlashActivity extends ActionBarActivity  {
 
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
-                        writePixelsToFile(pixels, converted);
-                        flashPixels(pixels);
-                        pixels.delete();
+                        try {
+                            if ((mDownsampling & DOWNSAMPLE_FFMPEG) != 0)
+                                convertPixelsFFMpeg(pixels, converted);
+                            else
+                                writePixelsToFile(pixels, converted);
+
+                            flashPixels(pixels);
+                        }
+                        finally {
+                            pixels.delete();
+                        }
 
                         return null;
                     }
@@ -113,7 +129,6 @@ public class FlashActivity extends ActionBarActivity  {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     };
 
@@ -149,6 +164,21 @@ public class FlashActivity extends ActionBarActivity  {
         }
 
         return 1f;
+    }
+
+    public String getPixelFormat(int depth)
+    {
+        switch (depth)
+        {
+            case DOWNSAMPLE_444:
+                return "rgb444";
+            case DOWNSAMPLE_555_FFMPEG:
+                return "rgb555";
+            case DOWNSAMPLE_565_FFMPEG:
+                return "rgb565";
+        }
+
+        return "rgb565";
     }
 
     private void writePixelsToFile(File file, Bitmap image)
@@ -214,6 +244,52 @@ public class FlashActivity extends ActionBarActivity  {
         }
     }
 
+    private void convertPixelsFFMpeg(File file, Bitmap image)
+    {
+        String libdir = getApplicationInfo().nativeLibraryDir;
+        File raw = new File(file.getAbsolutePath() + ".raw");
+
+        try {
+            OutputStream os = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.close();
+
+            String ffmpeg = libdir + "/" + FFMPEG_BINARY;
+            String pixel_format = getPixelFormat(mDownsampling);
+            String resolution = mTargetWidth + "x" + mTargetHeight;
+
+            String [] reducedColor = new String []
+                    { ffmpeg, "-y", "-vcodec", "png", "-i", file.getAbsolutePath(),
+                            "-vcodec", "rawvideo", "-f", "rawvideo",
+                            "-pix_fmt", pixel_format, raw.getAbsolutePath()
+                    };
+
+            Process p = Runtime.getRuntime().exec(reducedColor);
+            p.waitFor();
+
+            String [] fullColor = new String []
+                    { ffmpeg, "-y", "-vcodec", "rawvideo",  "-f", "rawvideo", "-pix_fmt",
+                            pixel_format, "-s", resolution, "-i", raw.getAbsolutePath(),
+                            "-vcodec", "rawvideo", "-f", "rawvideo",
+                            "-pix_fmt", "bgr24", file.getAbsolutePath()
+                    };
+
+            p = Runtime.getRuntime().exec(fullColor);
+            p.waitFor();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        finally
+        {
+            raw.delete();
+        }
+
+    }
 
     private void flashPixels(File file)
     {
@@ -241,8 +317,7 @@ public class FlashActivity extends ActionBarActivity  {
             outputStream.writeBytes("export LD_LIBRARY_PATH=" + libdir + "\n");
             outputStream.flush();
 
-            // this isn't actually a library, just a renamed binary to trick the IDE
-            outputStream.writeBytes(libdir + "/libflash_oemlogo.so\n");
+            outputStream.writeBytes(libdir + "/" + FLASHER_BINARY + "\n");
             outputStream.flush();
 
             outputStream.writeBytes("exit\n");
@@ -297,18 +372,18 @@ public class FlashActivity extends ActionBarActivity  {
                     photoPickerIntent.putExtra("output", tempUri);
                 }
 
-                int n1 = mTargetWidth;
-                int n2 = mTargetHeight;
+                int gcd = mTargetWidth;
+                int gcd1 = mTargetHeight;
 
                 // get aspect ratio
-                while (n1 != 0 && n2 != 0){
-                    if(n1 > n2)
-                        n1 = n1 % n2;
+                while (gcd != 0 && gcd1 != 0){
+                    if(gcd > gcd1)
+                        gcd = gcd % gcd1;
                     else
-                        n2 = n2 % n1;
+                        gcd1 = gcd1 % gcd;
                 }
 
-                int gcd = n1 == 0? n2: n1;
+                gcd = gcd1 == 0? gcd: gcd1;
 
                 photoPickerIntent.setType("image/*");
                 photoPickerIntent.putExtra("aspectX", mTargetWidth / gcd);
@@ -369,7 +444,7 @@ public class FlashActivity extends ActionBarActivity  {
                 break;
             case REQ_CODE_DOWNSAMPLING:
                 if (resultCode == RESULT_OK) {
-                    mDownsampling = resultIntent.getIntExtra(TAG_DOWNSAMPLING, DOWNSAMPLE_565);
+                    mDownsampling = resultIntent.getIntExtra(TAG_DOWNSAMPLING, DOWNSAMPLE_565_FFMPEG);
                 }
         }
     }

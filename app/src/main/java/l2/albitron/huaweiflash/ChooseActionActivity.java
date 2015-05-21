@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -69,10 +70,21 @@ public class ChooseActionActivity extends ActionBarActivity {
         flashMBN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flashImage.setEnabled(false);
-                flashMBN.setEnabled(false);
-                flashMBN.setText(getResources().getString(R.string.textPleaseWait));
-                flashFromMedia();
+                AlertDialog.Builder dlgAlert  =
+                        new AlertDialog.Builder(ChooseActionActivity.this);
+                dlgAlert.setMessage(getResources().getString(R.string.textProceed));
+                dlgAlert.setCancelable(true);
+                dlgAlert.setNegativeButton(getResources().getString(R.string.textCancel), null);
+                dlgAlert.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                flashImage.setEnabled(false);
+                                flashMBN.setEnabled(false);
+                                flashMBN.setText(getResources().getString(R.string.textPleaseWait));
+                                flashFromMedia();
+                            }
+                        });
+                dlgAlert.create().show();
             }
         });
 
@@ -135,7 +147,6 @@ public class ChooseActionActivity extends ActionBarActivity {
                     AlertDialog.Builder dlgAlert  =
                             new AlertDialog.Builder(ChooseActionActivity.this);
                     dlgAlert.setMessage(getResources().getString(R.string.textNoMBN));
-                    dlgAlert.setTitle(getResources().getString(R.string.textNoMBNError));
                     dlgAlert.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
